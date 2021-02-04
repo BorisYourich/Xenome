@@ -28,28 +28,20 @@ The server could not complete the request. Please contact the Galaxy Team if thi
 
  - Galaxy log :
  
- Traceback (most recent call last):
+Traceback (most recent call last):
   File "lib/galaxy/tools/__init__.py", line 1513, in handle_single_execution
     collection_info=collection_info,
   File "lib/galaxy/tools/__init__.py", line 1595, in execute
     return self.tool_action.execute(self, trans, incoming=incoming, set_output_hid=set_output_hid, history=history, **kwargs)
-  File "lib/galaxy/tools/actions/__init__.py", line 509, in execute
-    **element_kwds
-  File "lib/galaxy/tools/actions/__init__.py", line 881, in create_collection
-    **element_kwds
-  File "lib/galaxy/managers/collections.py", line 110, in create
-    copy_elements=copy_elements,
-  File "lib/galaxy/managers/collections.py", line 192, in create_dataset_collection
-    dataset_collection = builder.build_collection(type_plugin, elements)
-  File "lib/galaxy/model/dataset_collections/builder.py", line 14, in build_collection
-    set_collection_elements(dataset_collection, type, dataset_instances)
-  File "lib/galaxy/model/dataset_collections/builder.py", line 21, in set_collection_elements
-    for element in type.generate_elements(dataset_instances):
-  File "lib/galaxy/model/dataset_collections/types/paired.py", line 23, in generate_elements
-    self._validation_failed(INVALID_IDENTIFIERS_MESSAGE)
-  File "lib/galaxy/model/dataset_collections/types/__init__.py", line 28, in _validation_failed
-    raise exceptions.ObjectAttributeInvalidException(message)
-ObjectAttributeInvalidException: Paired instance must define 'forward' and 'reverse' datasets . 
+  File "lib/galaxy/tools/actions/__init__.py", line 460, in execute
+    known_outputs = output.known_outputs(input_collections, collections_manager.type_registry)
+  File "lib/galaxy/tool_util/parser/output_objects.py", line 174, in known_outputs
+    collection_prototype = self.structure.collection_prototype(inputs, type_registry)
+  File "lib/galaxy/tool_util/parser/output_objects.py", line 277, in collection_prototype
+    collection_prototype = type_registry.prototype(collection_type)
+  File "lib/galaxy/model/dataset_collections/registry.py", line 21, in prototype
+    raise Exception("Cannot pre-determine structure for collection of type %s" % plugin_type)
+Exception: Cannot pre-determine structure for collection of type list
 
 
 
@@ -102,13 +94,20 @@ The server could not complete the request. Please contact the Galaxy Team if thi
     collection_info=collection_info,
   File "lib/galaxy/tools/__init__.py", line 1595, in execute
     return self.tool_action.execute(self, trans, incoming=incoming, set_output_hid=set_output_hid, history=history, **kwargs)
-  File "lib/galaxy/tools/actions/__init__.py", line 460, in execute
-    known_outputs = output.known_outputs(input_collections, collections_manager.type_registry)
-  File "lib/galaxy/tool_util/parser/output_objects.py", line 174, in known_outputs
-    collection_prototype = self.structure.collection_prototype(inputs, type_registry)
-  File "lib/galaxy/tool_util/parser/output_objects.py", line 277, in collection_prototype
-    collection_prototype = type_registry.prototype(collection_type)
-  File "lib/galaxy/model/dataset_collections/registry.py", line 21, in prototype
-    raise Exception("Cannot pre-determine structure for collection of type %s" % plugin_type)
-Exception: Cannot pre-determine structure for collection of type list
-
+  File "lib/galaxy/tools/actions/__init__.py", line 509, in execute
+    **element_kwds
+  File "lib/galaxy/tools/actions/__init__.py", line 881, in create_collection
+    **element_kwds
+  File "lib/galaxy/managers/collections.py", line 110, in create
+    copy_elements=copy_elements,
+  File "lib/galaxy/managers/collections.py", line 192, in create_dataset_collection
+    dataset_collection = builder.build_collection(type_plugin, elements)
+  File "lib/galaxy/model/dataset_collections/builder.py", line 14, in build_collection
+    set_collection_elements(dataset_collection, type, dataset_instances)
+  File "lib/galaxy/model/dataset_collections/builder.py", line 21, in set_collection_elements
+    for element in type.generate_elements(dataset_instances):
+  File "lib/galaxy/model/dataset_collections/types/paired.py", line 23, in generate_elements
+    self._validation_failed(INVALID_IDENTIFIERS_MESSAGE)
+  File "lib/galaxy/model/dataset_collections/types/__init__.py", line 28, in _validation_failed
+    raise exceptions.ObjectAttributeInvalidException(message)
+ObjectAttributeInvalidException: Paired instance must define 'forward' and 'reverse' datasets .
