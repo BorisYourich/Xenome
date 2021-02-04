@@ -36,6 +36,17 @@
                  && mv "neither.fastq" "${neither_output_unpaired}"
                  && mv "ambiguous.fastq" "${ambiguous_output_unpaired}"
             #end if
+ 
+            #if $qual.add == "paired_dataset"
+                && mv "mouse_1.fastq" "mouse_forward.fastq"
+		&& mv "mouse_2.fastq" "mouse_reverse.fastq"
+		&& mv "both_1.fastq" "both_forward.fastq"
+		&& mv "both_2.fastq" "both_reverse.fastq"
+		&& mv "neither_1.fastq" "neither_forward.fastq"
+		&& mv "neither_2.fastq" "neither_reverse.fastq"
+		&& mv "ambiguous_1.fastq" "ambiguous_forward.fastq"
+		&& mv "ambiguous_2.fastq" "ambiguous_reverse.fastq"
+            #end if
         ]]>
     </command>
     <inputs>
@@ -85,15 +96,8 @@
 	<data name="out_human_paired_2" format="fastq" from_work_dir="human_2.fastq" label="Human Reverse Reads">
 	    <filter>qual['add'] == 'paired_dataset'</filter>
 	</data>
-        <collection name="other_output_paired" type="paired" label="Other Paired Reads Collection" format_source="in_1">		  
-            <data name="out_mouse_1" format="fastq" from_work_dir="mouse_1.fastq" label="Mouse Forward Reads"/>
-	    <data name="out_mouse_2" format="fastq" from_work_dir="mouse_2.fastq" label="Mouse Reverse Reads"/>
-	    <data name="out_both_1" format="fastq" from_work_dir="both_1.fastq" label="Both Forward Reads"/>
-	    <data name="out_both_2" format="fastq" from_work_dir="both_2.fastq" label="Both Reverse Reads"/>
-	    <data name="out_neither_1" format="fastq" from_work_dir="neither_1.fastq" label="Neither Forward Reads"/>
-	    <data name="out_neither_2" format="fastq" from_work_dir="neither_2.fastq" label="Neither Reverse Reads"/>
-	    <data name="out_ambiguous_1" format="fastq" from_work_dir="ambiguous_1.fastq" label="Ambiguous Forward Reads"/>
-	    <data name="out_ambiguous_2" format="fastq" from_work_dir="ambiguous_2.fastq" label="Ambiguous Reverse Reads"/>
+        <collection name="other_output_paired" type="list:paired" label="Other Paired Reads Collection" format_source="in_1">		  
+	    <discover_datasets pattern="(?P&lt;identifier_0&gt;[^_]+)_(?P&lt;identifier_1&gt;[^_]+)\.fastq" ext="fastqsanger" visible="true" />
 	    <filter>qual['add'] == 'paired_dataset'</filter>
 	</collection>
         <data name="stats" format="txt" label="Xenome Statistics"/>
